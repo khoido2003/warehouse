@@ -122,7 +122,18 @@ namespace WarehouseAnalysisApi.Controllers
         {
             string mdx =
                 @"
-                 SELECT NON EMPTY { [Measures].[Quantity] } ON COLUMNS, NON EMPTY { ([Dim Store].[Store Id].[Store Id].ALLMEMBERS * [Dim Store].[States].[States].ALLMEMBERS * [Dim Store].[City Name].[City Name].ALLMEMBERS * [Dim Product].[Description].[Description].ALLMEMBERS * [Dim Product].[Weight].[Weight].ALLMEMBERS * [Dim Product].[Size].[Size].ALLMEMBERS * [Dim Product].[Price].[Price].ALLMEMBERS ) } DIMENSION PROPERTIES MEMBER_CAPTION, MEMBER_UNIQUE_NAME ON ROWS FROM [Cube1] CELL PROPERTIES VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS               ";
+                 SELECT NON EMPTY { [Measures].[Quantity] } ON COLUMNS, 
+                     NON EMPTY { 
+                     ([Dim Store].[Store Id].[Store Id].ALLMEMBERS * 
+                     [Dim Store].[States].[States].ALLMEMBERS * 
+                     [Dim Store].[City Name].[City Name].ALLMEMBERS * 
+                     [Dim Product].[Description].[Description].ALLMEMBERS * 
+                     [Dim Product].[Weight].[Weight].ALLMEMBERS * 
+                     [Dim Product].[Size].[Size].ALLMEMBERS * 
+                     [Dim Product].[Price].[Price].ALLMEMBERS ) 
+                     } DIMENSION PROPERTIES MEMBER_CAPTION, 
+                     MEMBER_UNIQUE_NAME ON ROWS FROM [Cube1] 
+                                                CELL PROPERTIES VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS               ";
             var rawResult = await ExecuteMdxQuery(mdx);
             var beautified = BeautifyResults(rawResult);
             return Ok(beautified);

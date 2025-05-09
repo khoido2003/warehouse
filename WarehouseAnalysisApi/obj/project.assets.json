@@ -972,24 +972,26 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Lenovo\\.nuget\\packages\\": {}
+    "C:\\Users\\duc29\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\warehouseServer\\WarehouseAnalysisApi\\WarehouseAnalysisApi.csproj",
+      "projectUniqueName": "E:\\warehouse\\Olap\\warehouse\\WarehouseAnalysisApi\\WarehouseAnalysisApi.csproj",
       "projectName": "WarehouseAnalysisApi",
-      "projectPath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\warehouseServer\\WarehouseAnalysisApi\\WarehouseAnalysisApi.csproj",
-      "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\warehouseServer\\WarehouseAnalysisApi\\obj\\",
+      "projectPath": "E:\\warehouse\\Olap\\warehouse\\WarehouseAnalysisApi\\WarehouseAnalysisApi.csproj",
+      "packagesPath": "C:\\Users\\duc29\\.nuget\\packages\\",
+      "outputPath": "E:\\warehouse\\Olap\\warehouse\\WarehouseAnalysisApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\duc29\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1008,7 +1010,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net9.0": {
@@ -1050,7 +1052,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.105/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Users\\duc29\\.dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
       }
     }
   },
