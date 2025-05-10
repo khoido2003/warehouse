@@ -17,11 +17,11 @@ public class Cube2v2Controller:ControllerBase
     ---------http://localhost:5164/api/v2/cube2v2/requirement2-----------*/
     
     [HttpGet("requirement2")]
-    public async Task<IActionResult> GetRequirement2(int pageNumber = 1, int pageSize = 20, string name = "")
+    public async Task<IActionResult> GetRequirement2(int pageNumber = 1, int pageSize = 20, string time = null)
     {
         try
         {
-            var result = await _cube2Service.getRequirement2(name);
+            var result = await _cube2Service.getRequirement2(time);
 
             var pagedResult = result
                 .Skip((pageNumber - 1) * pageSize)
