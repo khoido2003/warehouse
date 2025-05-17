@@ -3,34 +3,35 @@ using WarehouseAnalysisApi.Service;
 
 namespace WarehouseAnalysisApi.Controllers;
 [ApiController]
-[Route("api/v2/[controller]")]
-public class Cube2v2Controller:ControllerBase
+[Route("api/[controller]")]
+public class Cube7Controller:ControllerBase
 {
-    private readonly Cube2Service _cube2Service;
+    private readonly Cube7Service _cube7Service;
 
-    public Cube2v2Controller(Cube2Service cube2Service)
+    public Cube7Controller(Cube7Service cube7Service)
     {
-        _cube2Service = cube2Service;
+        _cube7Service = cube7Service;
     }
 
-    /*----------------------Requirement 2----------------------
-    ---------http://localhost:5164/api/v2/cube2v2/requirement2-----------*/
+    /*----------------------Requirement 9----------------------
+    ---------http://localhost:5164/api/cube7/requirement9-----------*/
     
-    [HttpGet("requirement2")]
-    public async Task<IActionResult> GetRequirement2(int pageNumber = 1, int pageSize = 20, string time = null)
+    
+    [HttpGet("requirement9")]
+    public async Task<IActionResult> GetRequirement9(int pageNumber = 1, int pageSize = 20)
     {
         try
         {
-            var result = await _cube2Service.getRequirement2(time);
+            var result = await _cube7Service.getRequirement9();
 
             var pagedResult = result
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
-            
+        
             return Ok(new {
                 success = true,
-                message = "Requirement 2 has been retrieved successfully",
+                message = "Requirement 8 has been retrieved successfully",
                 total = result.Count,
                 currentPage = pageNumber,
                 pageSize,

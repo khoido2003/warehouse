@@ -52,5 +52,22 @@ namespace WarehouseAnalysisApi.Service.ServiceImpl
 
             return result;
         }
+        
+        public async Task<List<Dictionary<string, object>>> getRequirement7(string city, string state)
+        {
+            var dataList = await repository.getRequirement7Data(city, state);
+
+            var result = dataList.Select(item => new Dictionary<string, object>
+            {
+                {"productId", item.productId },
+                {"description", item.description },
+                {"storeId", item.storeId },
+                { "city", item.city },
+                { "state", item.state },
+                { "inventoryQuantity", item.quantity }
+            }).ToList();
+
+            return result;
+        }
     }
 }

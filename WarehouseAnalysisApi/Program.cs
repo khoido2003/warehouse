@@ -27,6 +27,12 @@ builder.Services.AddScoped<Cube4Repository>();
 builder.Services.AddScoped<Cube5Service, Cube5ServiceImpl>();
 builder.Services.AddScoped<Cube5Repository>();
 
+builder.Services.AddScoped<Cube6Service, Cube6ServiceImpl>();
+builder.Services.AddScoped<Cube6Repository>();
+
+builder.Services.AddScoped<Cube7Service, Cube7ServiceImpl>();
+builder.Services.AddScoped<Cube7Repository>();
+
 WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())

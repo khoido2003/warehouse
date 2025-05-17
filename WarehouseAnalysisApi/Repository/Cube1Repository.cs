@@ -1,4 +1,5 @@
-﻿using Microsoft.AnalysisServices.AdomdClient;
+﻿using System.Security.Authentication;
+using Microsoft.AnalysisServices.AdomdClient;
 using WarehouseAnalysisApi.Config;
 using WarehouseAnalysisApi.DTO;
 
@@ -182,5 +183,73 @@ namespace WarehouseAnalysisApi.Repository
             
             return result;
         }
+        
+        /* -----------------------Request 7 -------------------------*/
+    
+    public async Task<List<Cube1Request7>> getRequirement7Data(string city, string state)
+    {
+        string mdxQuery = $@"
+                SELECT 
+	                NON EMPTY {{ [Measures].[Quantity] }} ON COLUMNS, 
+	                NON EMPTY {{
+		                FILTER(
+			                (
+				                [Dim Store].[Store Id].[Store Id].ALLMEMBERS * 
+                                [Dim Store].[States].[States].ALLMEMBERS * 
+                                [Dim Store].[City Name].[City Name].ALLMEMBERS * 
+                                [Dim Product].[Product Id].[Product Id].ALLMEMBERS * 
+                                [Dim Product].[Description].[Description].ALLMEMBERS
+			                ),
+			                INSTR([Dim Store].[City Name].CURRENTMEMBER.MEMBER_CAPTION, ""{city}"") > 0
+			                AND INSTR([Dim Store].[States].CURRENTMEMBER.MEMBER_CAPTION, ""{state}"") > 0
+		                )
+	                }} 
+	                DIMENSION PROPERTIES MEMBER_CAPTION, MEMBER_UNIQUE_NAME 
+	                ON ROWS 
+	                FROM [Cube1] 
+	                CELL PROPERTIES VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS
+";
+
+        return await executeMdxQueryRequirement7(mdxQuery);
+    }
+    
+    private async Task<List<Cube1Request7>> executeMdxQueryRequirement7(string mdxQuery)
+    {
+        var result = new List<Cube1Request7>();
+
+        try
+        {
+            var connection = _connectionFactory.CreateConnection();
+            using var command = new AdomdCommand(mdxQuery, connection);
+            using var reader = command.ExecuteReader();
+
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                Console.WriteLine($"{i}: {reader.GetName(i)}");
+            }
+                
+            while (reader.Read())
+            {
+                var dto = new Cube1Request7
+                {
+                    productId = reader["[Dim Product].[Product Id].[Product Id].[MEMBER_CAPTION]"]?.ToString(),
+                    description = reader["[Dim Product].[Description].[Description].[MEMBER_CAPTION]"]?.ToString(),
+                    storeId = reader["[Dim Store].[Store Id].[Store Id].[MEMBER_CAPTION]"]?.ToString(),
+                    city = reader["[Dim Store].[City Name].[City Name].[MEMBER_CAPTION]"]?.ToString(),
+                    state = reader["[Dim Store].[States].[States].[MEMBER_CAPTION]"]?.ToString(),
+                    quantity = reader["[Measures].[Quantity]"]?.ToString()
+                };
+                    
+                result.Add(dto);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Lỗi khi thực thi MDX query: " + e.Message, e);
+        }
+            
+        return result;
+    }
     }
 }
+
