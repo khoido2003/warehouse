@@ -1,142 +1,132 @@
-using Microsoft.AnalysisServices.AdomdClient;
 using Microsoft.AspNetCore.Mvc;
+using WarehouseAnalysisApi.Service;
 
- /*http://localhost:5164/api/cube1/requirement1*/
+namespace WarehouseAnalysisApi.Controllers;
 
-namespace WarehouseAnalysisApi.Controllers
+[ApiController]
+[Route("api/[controller]")]
+public class Cube1Controller : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class Cube1Controller : ControllerBase
+    private readonly Cube1Service _cube1Service;
+
+    public Cube1Controller(Cube1Service cube1Service)
     {
-        private readonly string connectionString;
+        _cube1Service = cube1Service;
+    }
 
-        private Dictionary<string, string> _fieldMappings = new Dictionary<string, string>
+    /*----------------------Requirement 1----------------------
+    ---------http://localhost:5164/api/cube1v2/requirement1-----------*/
+
+
+    [HttpGet("requirement1")]
+    public async Task<IActionResult> GetRequirement1(
+        int pageNumber = 1,
+        int pageSize = 20,
+        string city = "",
+        string state = "",
+        string price = ""
+    )
+    {
+        try
         {
-            { "Store Id", "StoreId" },
-            { "States", "State" },
-            { "City Name", "City" },
-            { "Description", "ProductDescription" },
-            { "Weight", "Weight" },
-            { "Size", "Size" },
-            { "Price", "Price" },
-            { "[Measures].[Quantity]", "Quantity" },
-            { "[Measures].[Unit_sold]", "UnitSold" },
-            { "[Measures].[Total_amount]", "TotalAmount" },
-            { "Customer_name", "CustomerName" },
-            { "Year", "Year" },
-            { "Quarter", "Quarter" },
-            { "Month", "Month" },
-            { "Day", "Day" },
-        };
+            var result = await _cube1Service.getRequirement1(city, state, price);
 
-        private List<Dictionary<string, object>> BeautifyResults(
-            List<Dictionary<string, object>> rawData
-        )
-        {
-            var cleaned = new List<Dictionary<string, object>>();
+            var pagedResult = result.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
-            foreach (var row in rawData)
-            {
-                var cleanedRow = new Dictionary<string, object>();
-
-                foreach (var kv in row)
+            return Ok(
+                new
                 {
-                    // Skip MEMBER_UNIQUE_NAME fields
-                    if (kv.Key.Contains("MEMBER_UNIQUE_NAME"))
-                        continue;
-
-                    string key = GetCleanFieldName(kv.Key);
-                    cleanedRow[key] = kv.Value;
+                    success = true,
+                    message = "Requirement 1 has been retrieved successfully",
+                    total = result.Count,
+                    currentPage = pageNumber,
+                    pageSize,
+                    data = pagedResult,
                 }
-
-                cleaned.Add(cleanedRow);
-            }
-
-            return cleaned;
+            );
         }
-
-        private string GetCleanFieldName(string rawKey)
+        catch (Exception ex)
         {
-            // Try direct mapping first
-            if (_fieldMappings.ContainsKey(rawKey))
-                return _fieldMappings[rawKey];
+            return StatusCode(
+                500,
+                new { message = "Đã xảy ra lỗi khi xử lý yêu cầu.", error = ex.Message }
+            );
+        }
+    }
 
-            // Try to map MEMBER_CAPTION keys dynamically
-            if (rawKey.Contains("MEMBER_CAPTION"))
-            {
-                foreach (var map in _fieldMappings)
+    /*----------------------Requirement 4----------------------
+    ---------http://localhost:5164/api/cube1v2/requirement4-----------*/
+
+    [HttpGet("requirement4")]
+    public async Task<IActionResult> GetRequirement4(
+        int pageNumber = 1,
+        int pageSize = 20,
+        string city = "",
+        string state = ""
+    )
+    {
+        try
+        {
+            var result = await _cube1Service.getRequirement4(city, state);
+
+            var pagedResult = result.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+            return Ok(
+                new
                 {
-                    if (rawKey.Contains(map.Key))
-                        return map.Value;
+                    success = true,
+                    message = "Requirement 4 has been retrieved successfully",
+                    total = result.Count,
+                    currentPage = pageNumber,
+                    pageSize,
+                    data = pagedResult,
                 }
-
-                // Default to last segment of hierarchy if unknown
-                var parts = rawKey.Split('.');
-                return parts[^2]; // e.g., "Store Id" from [Dim Store].[Store Id].[Store Id].[MEMBER_CAPTION]
-            }
-
-            // Leave Measures or unknown keys as-is
-            return rawKey
-                .Replace("[Measures].", "")
-                .Replace("[", "")
-                .Replace("]", "")
-                .Replace(" ", "")
-                .Replace("_", "");
+            );
         }
-
-        public Cube1Controller(IConfiguration configuration)
+        catch (Exception ex)
         {
-            connectionString =
-                configuration["SSAS:ConnectionString"]
-                ?? throw new InvalidOperationException("SSAS connection string is missing.");
+            return StatusCode(
+                500,
+                new { message = "Đã xảy ra lỗi khi xử lý yêu cầu.", error = ex.Message }
+            );
         }
+    }
 
-        private async Task<List<Dictionary<string, object>>> ExecuteMdxQuery(string mdxQuery)
+    /*-------------------------Requirement 7-----------------------------
+     ---------http://localhost:5164/api/cube1v2/requirement7-----------*/
+
+    [HttpGet("requirement7")]
+    public async Task<IActionResult> GetRequirement7(
+        int pageNumber = 1,
+        int pageSize = 20,
+        string city = "",
+        string state = ""
+    )
+    {
+        try
         {
-            return await Task.Run(() =>
-            {
-                var results = new List<Dictionary<string, object>>();
-                using var connection = new AdomdConnection(connectionString);
-                connection.Open();
-                using var command = new AdomdCommand(mdxQuery, connection);
-                using var reader = command.ExecuteReader();
-                while (reader.Read())
+            var result = await _cube1Service.getRequirement7(city, state);
+
+            var pagedResult = result.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+            return Ok(
+                new
                 {
-                    var row = new Dictionary<string, object>();
-                    for (int i = 0; i < reader.FieldCount; i++)
-                    {
-                        row[reader.GetName(i)] = reader.GetValue(i);
-                    }
-                    results.Add(row);
+                    success = true,
+                    message = "Requirement 4 has been retrieved successfully",
+                    total = result.Count,
+                    currentPage = pageNumber,
+                    pageSize,
+                    data = pagedResult,
                 }
-                return results;
-            });
+            );
         }
-
-        ///////////////////////////////////////////////////////////////////
-
-
-        [HttpGet("requirement1")]
-        public async Task<IActionResult> GetRequirement1()
+        catch (Exception ex)
         {
-            string mdx =
-                @"
-                 SELECT NON EMPTY { [Measures].[Quantity] } ON COLUMNS, 
-                     NON EMPTY { 
-                     ([Dim Store].[Store Id].[Store Id].ALLMEMBERS * 
-                     [Dim Store].[States].[States].ALLMEMBERS * 
-                     [Dim Store].[City Name].[City Name].ALLMEMBERS * 
-                     [Dim Product].[Description].[Description].ALLMEMBERS * 
-                     [Dim Product].[Weight].[Weight].ALLMEMBERS * 
-                     [Dim Product].[Size].[Size].ALLMEMBERS * 
-                     [Dim Product].[Price].[Price].ALLMEMBERS ) 
-                     } DIMENSION PROPERTIES MEMBER_CAPTION, 
-                     MEMBER_UNIQUE_NAME ON ROWS FROM [Cube1] 
-                                                CELL PROPERTIES VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS               ";
-            var rawResult = await ExecuteMdxQuery(mdx);
-            var beautified = BeautifyResults(rawResult);
-            return Ok(beautified);
+            return StatusCode(
+                500,
+                new { message = "Đã xảy ra lỗi khi xử lý yêu cầu.", error = ex.Message }
+            );
         }
     }
 }
