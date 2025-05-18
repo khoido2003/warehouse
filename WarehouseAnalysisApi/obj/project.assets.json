@@ -977,11 +977,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\warehouseServer\\WarehouseAnalysisApi\\WarehouseAnalysisApi.csproj",
+      "projectUniqueName": "E:\\ptit\\warehouse\\WarehouseAnalysisApi\\WarehouseAnalysisApi.csproj",
       "projectName": "WarehouseAnalysisApi",
-      "projectPath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\warehouseServer\\WarehouseAnalysisApi\\WarehouseAnalysisApi.csproj",
+      "projectPath": "E:\\ptit\\warehouse\\WarehouseAnalysisApi\\WarehouseAnalysisApi.csproj",
       "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\warehouseServer\\WarehouseAnalysisApi\\obj\\",
+      "outputPath": "E:\\ptit\\warehouse\\WarehouseAnalysisApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -1050,7 +1050,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.105/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.106/PortableRuntimeIdentifierGraph.json"
       }
     }
   },
