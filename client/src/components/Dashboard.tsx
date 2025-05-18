@@ -15,6 +15,7 @@ interface DashboardProps {
 
 const Dashboard = ({ requirement }: DashboardProps) => {
   const [data, setData] = useState<any[]>([]);
+  const [chartData, setChartData] = useState<any[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize] = useState<number>(20);
@@ -50,6 +51,25 @@ const Dashboard = ({ requirement }: DashboardProps) => {
       if (!endpoint) {
         throw new Error(`Invalid requirement: ${requirement}`);
       }
+      
+      // Fetch full data for chart (no pagination)
+      if ([1, 2, 7, 9].includes(requirement)) {
+        const chartParams = new URLSearchParams({
+          city: filters.city,
+          state: filters.state,
+          ...(filters.time && requirement === 2 && { time: filters.time }),
+          pageSize: "1000", // Lấy số lượng lớn để đảm bảo đủ dữ liệu cho biểu đồ
+          pageNumber: "1"
+        });
+        
+        const chartResponse = await axios.get(`/api/${endpoint}?${chartParams.toString()}`);
+        if (!chartResponse.data.data || !Array.isArray(chartResponse.data.data)) {
+          throw new Error("Invalid chart data format");
+        }
+        setChartData(chartResponse.data.data);
+      }
+      
+      // Fetch paginated data for table
       const params = new URLSearchParams({
         pageNumber: pageNumber.toString(),
         pageSize: pageSize.toString(),
@@ -72,6 +92,7 @@ const Dashboard = ({ requirement }: DashboardProps) => {
       console.error("Error fetching data:", error);
       setError(error.message || "Failed to fetch data");
       setData([]);
+      setChartData([]);
       setTotal(0);
     } finally {
       setLoading(false);
@@ -88,7 +109,10 @@ const Dashboard = ({ requirement }: DashboardProps) => {
   };
 
   const renderChart = () => {
-    if (!data || data.length === 0) {
+    // Use chartData instead of data for charts when available
+    const displayData = [1, 2, 7, 9].includes(requirement) ? chartData : data;
+    
+    if (!displayData || displayData.length === 0) {
       console.log("renderChart: No data, skipping chart");
       return null;
     }
@@ -96,17 +120,17 @@ const Dashboard = ({ requirement }: DashboardProps) => {
       "renderChart: Rendering chart for requirement",
       requirement,
       "with data:",
-      data,
+      displayData,
     );
     switch (requirement) {
       case 1:
-        return <SalesChart data={data} />; // Bar chart: Product quantities by store/city
+        return <SalesChart data={displayData} />; // Bar chart: Product quantities by store/city
       case 2:
-        return <SalesChart data={data} />; // Line chart: Order totals over time
+        return <SalesChart data={displayData} />; // Line chart: Order totals over time
       case 7:
-        return <InventoryChart data={data} />; // Bar chart: Inventory by store/city
+        return <InventoryChart data={displayData} />; // Bar chart: Inventory by store/city
       case 9:
-        return <CustomerChart data={data} />; // Pie chart: Customer types
+        return <CustomerChart data={displayData} />; // Pie chart: Customer types
       case 3:
       case 4:
       case 5:
