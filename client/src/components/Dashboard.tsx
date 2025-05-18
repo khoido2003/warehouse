@@ -10,6 +10,7 @@ import CustomerChart from "./Charts/CustomerChart";
 import OrderCustomerChart from "./Charts/OrderCustomerChart";
 import OfficeAddressChart from "./Charts/OfficeAddressChart";
 import OrderDetailChart from "./Charts/OrderDetailChart";
+import OrderItemChart from "./Charts/OrderItemChart";
 import Navigation from "./Navigation";
 
 interface DashboardProps {
@@ -56,7 +57,7 @@ const Dashboard = ({ requirement }: DashboardProps) => {
       }
       
       // Fetch full data for chart (no pagination)
-      if ([1, 2, 4, 5, 7, 9].includes(requirement)) {
+      if ([1, 2, 4, 5, 7, 8, 9].includes(requirement)) {
         const chartParams = new URLSearchParams({
           city: filters.city,
           state: filters.state,
@@ -113,7 +114,7 @@ const Dashboard = ({ requirement }: DashboardProps) => {
 
   const renderChart = () => {
     // Use chartData instead of data for charts when available
-    const displayData = [1, 2, 4, 5, 7, 9].includes(requirement) ? chartData : data;
+    const displayData = [1, 2, 4, 5, 7, 8, 9].includes(requirement) ? chartData : data;
     
     if (!displayData || displayData.length === 0) {
       console.log("renderChart: No data, skipping chart");
@@ -136,11 +137,12 @@ const Dashboard = ({ requirement }: DashboardProps) => {
         return <OrderDetailChart data={displayData} />; // New chart for Order Details
       case 7:
         return <InventoryChart data={displayData} />; // Bar chart: Inventory by store/city
+      case 8:
+        return <OrderItemChart data={displayData} />; // New chart for OrderItem from Cube6
       case 9:
         return <CustomerChart data={displayData} />; // Pie chart: Customer types
       case 3:
       case 6:
-      case 8:
         return null; // No chart for these, rely on DataTable
       default:
         return null;
