@@ -12,30 +12,44 @@ namespace WarehouseAnalysisApi.Service.ServiceImpl
             this.repository = cube1Repository;
         }
 
-        public async Task<List<Dictionary<string, object>>> getRequirement1(string city, string state, string price)
+        public async Task<(List<Dictionary<string, object>> result, 
+            List<Dictionary<string, object>> chart)> getRequirement1(string city, string state, string price)
         {
-            var dataList = new List<Cube1Request1>();
-            if (price != "")
-            {
-                string[] prices = price.Split('-');
-                int minPriceInt = Convert.ToInt32(prices[0]);
-                int maxPriceInt = Convert.ToInt32(prices[1]);
-                dataList = await repository.getRequirement1Data(city, state, minPriceInt, maxPriceInt);
-            } else dataList = await repository.getRequirement1Data(city, state);
+            List<Cube1Request1> dataList, chartList;
 
-            var result = dataList.Select(item => new Dictionary<string, object>
+            if (!string.IsNullOrWhiteSpace(price))
             {
-                { "storeId", item.storeId },
-                { "state", item.state },
-                { "city", item.city },
-                { "productDescription", item.productDescription },
-                { "weight", item.weight },
-                { "size", item.size },
-                { "price", item.price },
-                { "quantity", item.quantity }
-            }).ToList();
+                var prices = price.Split('-');
+                if (prices.Length == 2 &&
+                    int.TryParse(prices[0], out int minPrice) &&
+                    int.TryParse(prices[1], out int maxPrice))
+                {
+                    (dataList, chartList) = await repository.getRequirement1Data(city, state, minPrice, maxPrice);
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid price range format. Expected format: 'min-max'");
+                }
+            }
+            else
+            {
+                (dataList, chartList) = await repository.getRequirement1Data(city, state);
+            }
 
-            return result;
+            List<Dictionary<string, object>> ConvertToDict(List<Cube1Request1> list) =>
+                list.Select(item => new Dictionary<string, object>
+                {
+                    { "storeId", item.storeId },
+                    { "state", item.state },
+                    { "city", item.city },
+                    { "productDescription", item.productDescription },
+                    { "weight", item.weight },
+                    { "size", item.size },
+                    { "price", item.price },
+                    { "quantity", item.quantity }
+                }).ToList();
+
+            return (ConvertToDict(dataList), ConvertToDict(chartList));
         }
 
         public async Task<List<Dictionary<string, object>>> getRequirement4(string city, string state)

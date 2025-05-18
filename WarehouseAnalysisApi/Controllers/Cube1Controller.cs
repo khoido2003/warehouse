@@ -15,7 +15,7 @@ public class Cube1Controller : ControllerBase
     }
 
     /*----------------------Requirement 1----------------------
-    ---------http://localhost:5164/api/cube1v2/requirement1-----------*/
+    ---------http://localhost:5164/api/cube1/requirement1-----------*/
 
 
     [HttpGet("requirement1")]
@@ -29,21 +29,23 @@ public class Cube1Controller : ControllerBase
     {
         try
         {
-            var result = await _cube1Service.getRequirement1(city, state, price);
+            var (result, chart) = await _cube1Service.getRequirement1(city, state, price);
 
             var pagedResult = result.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
-            return Ok(
-                new
+            return Ok(new
+            {
+                success = true,
+                message = "Requirement 1 has been retrieved successfully",
+                total = result.Count,
+                currentPage = pageNumber,
+                pageSize,
+                data = new
                 {
-                    success = true,
-                    message = "Requirement 1 has been retrieved successfully",
-                    total = result.Count,
-                    currentPage = pageNumber,
-                    pageSize,
-                    data = pagedResult,
+                    table = pagedResult,
+                    chart = chart
                 }
-            );
+            });
         }
         catch (Exception ex)
         {

@@ -1,19 +1,19 @@
 {
   "version": 2,
-  "dgSpecHash": "STDyyiJNhNQ=",
+  "dgSpecHash": "3h+HJ5U2pXU=",
   "success": true,
-  "projectFilePath": "E:\\ptit\\warehouse\\WarehouseAnalysisApi\\WarehouseAnalysisApi.csproj",
+  "projectFilePath": "E:\\warehouse\\Olap2\\update\\WarehouseAnalysisApi\\WarehouseAnalysisApi.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.analysisservices.adomdclient.netcore.retail.amd64\\19.84.1\\microsoft.analysisservices.adomdclient.netcore.retail.amd64.19.84.1.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.0\\microsoft.aspnetcore.openapi.9.0.0.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.identity.client\\4.56.0\\microsoft.identity.client.4.56.0.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.identitymodel.abstractions\\6.22.0\\microsoft.identitymodel.abstractions.6.22.0.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\swashbuckle.aspnetcore\\6.7.3\\swashbuckle.aspnetcore.6.7.3.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.7.3\\swashbuckle.aspnetcore.swagger.6.7.3.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.7.3\\swashbuckle.aspnetcore.swaggergen.6.7.3.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.7.3\\swashbuckle.aspnetcore.swaggerui.6.7.3.nupkg.sha512"
+    "C:\\Users\\duc29\\.nuget\\packages\\microsoft.analysisservices.adomdclient.netcore.retail.amd64\\19.84.1\\microsoft.analysisservices.adomdclient.netcore.retail.amd64.19.84.1.nupkg.sha512",
+    "C:\\Users\\duc29\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.0\\microsoft.aspnetcore.openapi.9.0.0.nupkg.sha512",
+    "C:\\Users\\duc29\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "C:\\Users\\duc29\\.nuget\\packages\\microsoft.identity.client\\4.56.0\\microsoft.identity.client.4.56.0.nupkg.sha512",
+    "C:\\Users\\duc29\\.nuget\\packages\\microsoft.identitymodel.abstractions\\6.22.0\\microsoft.identitymodel.abstractions.6.22.0.nupkg.sha512",
+    "C:\\Users\\duc29\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512",
+    "C:\\Users\\duc29\\.nuget\\packages\\swashbuckle.aspnetcore\\6.7.3\\swashbuckle.aspnetcore.6.7.3.nupkg.sha512",
+    "C:\\Users\\duc29\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.7.3\\swashbuckle.aspnetcore.swagger.6.7.3.nupkg.sha512",
+    "C:\\Users\\duc29\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.7.3\\swashbuckle.aspnetcore.swaggergen.6.7.3.nupkg.sha512",
+    "C:\\Users\\duc29\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.7.3\\swashbuckle.aspnetcore.swaggerui.6.7.3.nupkg.sha512"
   ],
   "logs": [
     {

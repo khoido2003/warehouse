@@ -15,27 +15,8 @@ namespace WarehouseAnalysisApi.Repository
         }
 
         // Request 1
-    /*    public async Task<List<Cube1Request1>> getRequirement1Data()
-        {
-            string mdxQuery = @"SELECT NON EMPTY { [Measures].[Quantity] } ON COLUMNS, 
-                NON EMPTY { 
-                    ([Dim Store].[Store Id].[Store Id].ALLMEMBERS * 
-                    [Dim Store].[States].[States].ALLMEMBERS * 
-                    [Dim Store].[City Name].[City Name].ALLMEMBERS * 
-                    [Dim Product].[Description].[Description].ALLMEMBERS * 
-                    [Dim Product].[Weight].[Weight].ALLMEMBERS * 
-                    [Dim Product].[Size].[Size].ALLMEMBERS * 
-                    [Dim Product].[Price].[Price].ALLMEMBERS ) 
-                } DIMENSION PROPERTIES MEMBER_CAPTION, MEMBER_UNIQUE_NAME 
-                ON ROWS FROM [Cube1] 
-                CELL PROPERTIES VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS";
-
-            return await executeMdxQueryRequirement1(mdxQuery);
-        }
-        
-        */
     
-        public async Task<List<Cube1Request1>> getRequirement1Data(string city, string state, int? minPrice = null, int? maxPrice = null)
+        public async Task<(List<Cube1Request1> Result, List<Cube1Request1> Chart)> getRequirement1Data(string city, string state, int? minPrice = null, int? maxPrice = null)
         {
             string priceFilter = "";
             if (minPrice.HasValue && maxPrice.HasValue)
@@ -69,27 +50,53 @@ namespace WarehouseAnalysisApi.Repository
                 DIMENSION PROPERTIES MEMBER_CAPTION, MEMBER_UNIQUE_NAME 
                 ON ROWS 
                 FROM [Cube1] 
-                CELL PROPERTIES VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS";
-
-            return await executeMdxQueryRequirement1(mdxQuery);
+                CELL PROPERTIES VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS;";
+            
+            string mdxQuery2 = $@"
+                SELECT 
+                  NON EMPTY {{ [Measures].[Quantity] }} ON COLUMNS, 
+                  NON EMPTY 
+                    TopCount(
+                      FILTER(
+                        (
+                          [Dim Store].[Store Id].[Store Id].ALLMEMBERS * 
+                          [Dim Store].[States].[States].ALLMEMBERS * 
+                          [Dim Store].[City Name].[City Name].ALLMEMBERS * 
+                          [Dim Product].[Description].[Description].ALLMEMBERS * 
+                          [Dim Product].[Weight].[Weight].ALLMEMBERS * 
+                          [Dim Product].[Size].[Size].ALLMEMBERS * 
+                          [Dim Product].[Price].[Price].ALLMEMBERS
+                        ),
+                        INSTR([Dim Store].[City Name].CURRENTMEMBER.MEMBER_CAPTION, ""{city}"") > 0
+                        AND INSTR([Dim Store].[States].CURRENTMEMBER.MEMBER_CAPTION, ""{state}"") > 0
+                        {priceFilter}
+                      ),
+                      10,
+                      [Measures].[Quantity]
+                    ) 
+                  DIMENSION PROPERTIES 
+                    MEMBER_CAPTION, MEMBER_UNIQUE_NAME 
+                  ON ROWS 
+                FROM [Cube1] 
+                CELL PROPERTIES 
+                  VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS;";
+            
+            Console.WriteLine(mdxQuery2);
+            return await executeMdxQueryRequirement1(mdxQuery, mdxQuery2);
         }
 
 
 
-        private async Task<List<Cube1Request1>> executeMdxQueryRequirement1(string mdxQuery)
+        private async Task<(List<Cube1Request1> Result, List<Cube1Request1> Chart)> executeMdxQueryRequirement1(string mdxQuery, string mdxQuery2)
         {
             var result = new List<Cube1Request1>();
-
+            var chart = new List<Cube1Request1>();
             try
             {
                 var connection = _connectionFactory.CreateConnection();
-                using var command = new AdomdCommand(mdxQuery, connection);
-                using var reader = command.ExecuteReader();
-
-                for (int i = 0; i < reader.FieldCount; i++)
-                {
-                    Console.WriteLine($"{i}: {reader.GetName(i)}");
-                }
+                
+                using (var command = new AdomdCommand(mdxQuery, connection))
+                using (var reader = command.ExecuteReader())
                 
                 while (reader.Read())
                 {
@@ -109,13 +116,35 @@ namespace WarehouseAnalysisApi.Repository
                     
                     result.Add(dto);
                 }
+                
+                using (var command = new AdomdCommand(mdxQuery2, connection))
+                using (var reader = command.ExecuteReader())
+                while (reader.Read())
+                {
+                    var dto = new Cube1Request1
+                    {
+                        storeId = reader["[Dim Store].[Store Id].[Store Id].[MEMBER_CAPTION]"]?.ToString(),
+                        state = reader["[Dim Store].[States].[States].[MEMBER_CAPTION]"]?.ToString(),
+                        city = reader["[Dim Store].[City Name].[City Name].[MEMBER_CAPTION]"]?.ToString(),
+                        productDescription = reader["[Dim Product].[Description].[Description].[MEMBER_CAPTION]"]?.ToString(),
+                        weight = reader["[Dim Product].[Weight].[Weight].[MEMBER_CAPTION]"]?.ToString(),
+                        size = reader["[Dim Product].[Size].[Size].[MEMBER_CAPTION]"]?.ToString(),
+                        price = reader["[Dim Product].[Price].[Price].[MEMBER_CAPTION]"]?.ToString(),
+                        quantity = reader.IsDBNull(reader.GetOrdinal("[Measures].[Quantity]")) 
+                            ? 0 
+                            : Convert.ToInt32(reader["[Measures].[Quantity]"])
+                    };
+                    
+                    chart.Add(dto);
+                }
+                
             }
             catch (Exception e)
             {
                 throw new Exception("Lỗi khi thực thi MDX query: " + e.Message, e);
             }
             
-            return result;
+            return (result, chart);
         }
         
         // Request 4
