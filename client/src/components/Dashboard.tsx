@@ -7,6 +7,7 @@ import DataTable from "./DataTable";
 import SalesChart from "./Charts/SalesChart";
 import InventoryChart from "./Charts/InventoryChart";
 import CustomerChart from "./Charts/CustomerChart";
+import OrderCustomerChart from "./Charts/OrderCustomerChart";
 import Navigation from "./Navigation";
 
 interface DashboardProps {
@@ -126,7 +127,7 @@ const Dashboard = ({ requirement }: DashboardProps) => {
       case 1:
         return <SalesChart data={displayData} />; // Bar chart: Product quantities by store/city
       case 2:
-        return <SalesChart data={displayData} />; // Line chart: Order totals over time
+        return <OrderCustomerChart data={displayData} />; // Chart for Orders & Customers
       case 7:
         return <InventoryChart data={displayData} />; // Bar chart: Inventory by store/city
       case 9:
@@ -135,7 +136,6 @@ const Dashboard = ({ requirement }: DashboardProps) => {
       case 4:
       case 5:
       case 6:
-      case 8:
         return null; // No chart for these, rely on DataTable
       default:
         return null;
