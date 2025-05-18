@@ -15,19 +15,23 @@ public class Cube4Repository
 
     public async Task<List<Cube4Request5>> getRequirement5Data()
     {
-
-        string mdxQuery = @"SELECT NON EMPTY {{ [Measures].[Customer Id], [Measures].[Total Amount], [Measures].[Unit Sold]}} ON COLUMNS, 
-                NON EMPTY {{{{
-                    (
-                     [Dim Product 2].[Product Id].[Product Id].ALLMEMBERS *
-                     [Dim Product 2].[Description].[Description].ALLMEMBERS * 
-                     [Dim Store 2].[Store Id].[Store Id].ALLMEMBERS
-					 )
-                }}}} 
-                DIMENSION PROPERTIES MEMBER_CAPTION, MEMBER_UNIQUE_NAME 
-                ON ROWS 
-                FROM [Cube4] 
-                CELL PROPERTIES VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS";
+        // Simplified query without time measures
+        string mdxQuery = @"SELECT NON EMPTY { 
+                [Measures].[Customer Id], 
+                [Measures].[Unit Sold], 
+                [Measures].[Total Amount]
+            } ON COLUMNS, 
+            NON EMPTY { 
+                (
+                    [Dim Product 2].[Product Id].[Product Id].ALLMEMBERS *
+                    [Dim Product 2].[Description].[Description].ALLMEMBERS * 
+                    [Dim Store 2].[Store Id].[Store Id].ALLMEMBERS
+                )
+            } 
+            DIMENSION PROPERTIES MEMBER_CAPTION, MEMBER_UNIQUE_NAME 
+            ON ROWS 
+            FROM [Cube4] 
+            CELL PROPERTIES VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS";
 
         return await executeMdxQuery(mdxQuery);
     }
@@ -35,17 +39,21 @@ public class Cube4Repository
 
     private async Task<List<Cube4Request5>> executeMdxQuery(string mdxQuery)
     {
-        var results = new List<Cube4Request5>();
+        var tempResults = new List<Cube4Request5>();
         try
         {
             var connection = _connectionFactory.CreateConnection();
             using var command = new AdomdCommand(mdxQuery, connection);
             var reader = command.ExecuteReader();
+            
+            // Get field names to check which ones are available
+            var availableFields = new List<string>();
             for (int i = 0; i < reader.FieldCount; i++)
             {
-                Console.WriteLine($"{i}: {reader.GetName(i)}");
+                var fieldName = reader.GetName(i);
+                Console.WriteLine($"{i}: {fieldName}");
+                availableFields.Add(fieldName);
             }
-        
 
             while (reader.Read())
             {
@@ -58,7 +66,8 @@ public class Cube4Repository
                     totalAmount = reader["[Measures].[Total Amount]"]?.ToString(),
                     unitSold = reader["[Measures].[Unit Sold]"]?.ToString(),
                 };
-                results.Add(dto);
+                
+                tempResults.Add(dto);
             }
         }
         catch (Exception e)
@@ -66,6 +75,16 @@ public class Cube4Repository
             throw new Exception("Lỗi khi thực thi MDX query: " + e.Message, e);
         }
         
+        // Group by composite key to eliminate duplicates
+        var results = tempResults
+            .GroupBy(item => new { 
+                item.storeId, 
+                item.productId, 
+                item.customerId
+            })
+            .Select(group => group.First())
+            .ToList();
+            
         return results;
     }
 }
