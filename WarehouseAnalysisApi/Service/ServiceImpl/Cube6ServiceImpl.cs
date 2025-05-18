@@ -11,16 +11,22 @@ public class Cube6ServiceImpl: Cube6Service
         this.repository = repository;
     }
 
-    public async Task<List<Dictionary<string, object>>> getRequirement8()
+    public async Task<List<Dictionary<string, object>>> getRequirement8(int pageNumber = 1, int pageSize = 20)
     {
-        var dataList = await repository.getRequirement8Data();
+        var dataList = await repository.getRequirement8Data(pageSize, pageNumber);
 
         var result = dataList.Select(item => new Dictionary<string, object>
         {
-            {"customerId", item.customerId},
-            {"customerName", item.customerName},
             {"city", item.city},
             {"state", item.state},
+            {"customerId", item.customerId},
+            {"customerName", item.customerName},
+            {"totalAmount", item.totalAmount},
+            {"unitSold", item.unitsold},
+            {"day", item.day},
+            {"month", item.month},
+            {"quarter", item.quarter},
+            {"year", item.year}
         }).ToList();
         
         return result;
