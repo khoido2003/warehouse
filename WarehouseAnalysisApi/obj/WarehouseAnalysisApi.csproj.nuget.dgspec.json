@@ -1,22 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lenovo\\OneDrive\\Desktop\\warehouse\\WarehouseAnalysisApi\\WarehouseAnalysisApi.csproj": {}
+    "E:\\ptit\\warehouse\\WarehouseAnalysisApi\\WarehouseAnalysisApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lenovo\\OneDrive\\Desktop\\warehouse\\WarehouseAnalysisApi\\WarehouseAnalysisApi.csproj": {
+    "E:\\ptit\\warehouse\\WarehouseAnalysisApi\\WarehouseAnalysisApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\warehouse\\WarehouseAnalysisApi\\WarehouseAnalysisApi.csproj",
+        "projectUniqueName": "E:\\ptit\\warehouse\\WarehouseAnalysisApi\\WarehouseAnalysisApi.csproj",
         "projectName": "WarehouseAnalysisApi",
-        "projectPath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\warehouse\\WarehouseAnalysisApi\\WarehouseAnalysisApi.csproj",
+        "projectPath": "E:\\ptit\\warehouse\\WarehouseAnalysisApi\\WarehouseAnalysisApi.csproj",
         "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\warehouse\\WarehouseAnalysisApi\\obj\\",
+        "outputPath": "E:\\ptit\\warehouse\\WarehouseAnalysisApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
-        "originalTargetFrameworks": ["net9.0"],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
@@ -27,7 +29,9 @@
           }
         },
         "warningProperties": {
-          "warnAsError": ["NU1605"]
+          "warnAsError": [
+            "NU1605"
+          ]
         },
         "restoreAuditProperties": {
           "enableAudit": "true",
@@ -76,7 +80,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.105/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.106/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
